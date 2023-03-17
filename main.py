@@ -13,54 +13,48 @@ class LinkedList:
             self.head = obj
 
     def remove_obj(self, indx):
-        if indx == 0:
-            temp_obj = self.head.prev
-            temp_obj.prev = None
-            self.head = temp_obj
+        temp_obj = self.head
 
         temp_count = 0
-        if indx > 1:
-            link_obj = self.head.next
-            while temp_count < indx:
-                temp_count += 1
-                link_obj = link_obj.next
-            prev_obj = link_obj.prev
-            prev_obj.next = link_obj.next
-            next_obj = link_obj.next
-            next_obj.prev = link_obj.prev
-            link_obj.next = None
-            link_obj.prev = None
+        while temp_obj and temp_count < indx:
+            temp_obj = temp_obj.next
+            temp_count += 1
+
+        if temp_obj is None:
+            return
+
+        prev_obj, next_obj = temp_obj.prev, temp_obj.next
+        if prev_obj:
+            prev_obj.next = next_obj
+        if next_obj:
+            next_obj.prev = prev_obj
+
+        if self.head == temp_obj:
+            self.head = temp_obj
+        if self.tail == temp_obj:
+            self.tail = temp_obj
 
     def __len__(self):
-        count = 1
+        count = 0
 
-        if self.head is None:
-            return 0
-
-        link_obj = self.head.next
-        while link_obj is not self.tail:
+        obj = self.head
+        while obj:
             count += 1
-            link_obj = link_obj.next
+            obj = obj.next
 
         return count
 
     def __call__(self, num, *args, **kwargs):
         count = 0
+        obj = self.head
 
-        if num == 0:
-            return self.head.data
+        while obj and count < num:
+            print(obj.data)
+            obj = obj.next
+            print(obj.data)
+            count += 1
 
-        if num == 1:
-            return self.head.next.data
-
-        if num > 1:
-            link_obj = self.head.next
-            while link_obj is not self.tail:
-                count += 1
-                link_obj = link_obj.next
-
-            return link_obj.data
-
+        return obj.data # if link_obj else None
 
 class ObjList:
     def __init__(self, data):
@@ -94,6 +88,7 @@ class ObjList:
     def data(self, data):
         if type(data) is str:
             self.__data = data
+
 
 linked_lst = LinkedList()
 linked_lst.add_obj(ObjList("Sergey"))
